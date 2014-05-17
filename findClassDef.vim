@@ -39,7 +39,6 @@ vim.command("let qflist=%s"%qflist)
 
 EOF
 
-echo qflist
 call setqflist(qflist)
 :copen
 
