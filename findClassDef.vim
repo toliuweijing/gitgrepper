@@ -1,4 +1,4 @@
-function! FindDefinitionClass(gitDir, pattern)
+function! FindDefinition(gitDir, ...)
 
 python << EOF
 
@@ -12,7 +12,9 @@ def dictionariesFromGitGrep(output, cwd):
 
   for line in output.splitlines():
     
-    [filename, lnum, text] = line.split(':') 
+    filename = line.split(':')[0]
+    lnum = line.split(':')[1]
+    text = line.split(':')[2]
 
     dictionary = {
       'filename':cwd+'/'+filename, 
@@ -27,15 +29,20 @@ def dictionariesFromGitGrep(output, cwd):
 # find class definition with pattern and git directory
 def findClassDef(pattern, gitDir):
   os.chdir(gitDir)  
-  command = "git grep -in 'class " + pattern + " '"
+  command = "git grep -in '" + pattern + "'"
   output = os.popen(command).read()
   return dictionariesFromGitGrep(output, gitDir)
 
 # Main
-pattern = vim.eval("a:pattern")
-gitDir = vim.eval("a:gitDir")
-qflist = findClassDef(pattern, gitDir)
-vim.command("let qflist=%s"%qflist)
+pattern = ""
+for e in vim.eval("a:000"):
+  pattern = pattern + e
+print pattern
+
+if (len(pattern) > 0):
+  gitDir = vim.eval("a:gitDir")
+  qflist = findClassDef(pattern, gitDir)
+  vim.command("let qflist=%s"%qflist)
 
 EOF
 
