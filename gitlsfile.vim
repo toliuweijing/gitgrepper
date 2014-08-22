@@ -36,6 +36,11 @@ class Converter:
 
     return dictionaries
     
+  def generateQflist(self, pattern, repository):
+    output = self.execGitLsFiles(pattern, repository)
+    return self.qflistFromGitLsFiles(output, repository)
+
+    
 # Main
 # 1. aggregate function arguments into a single pattern.
 # 2. search in gitDir with the pattern.
